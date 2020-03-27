@@ -116,6 +116,26 @@ def set_orientation_from_surface_points(geo_model, indices_array):
             geo_model.add_orientations(X=ori_parameters[0], Y=ori_parameters[1], Z=ori_parameters[2],
                                        orientation=ori_parameters[3:6], pole_vector=ori_parameters[6:9],
                                        surface=form)
+    elif indices_array is None:
+        surfaces = geo_model.surface_points.df['surface'].unique()
+
+        from scipy.spatial import Delaunay
+        for form in surfaces:
+            idxs_s = geo_model.surface_points.df['surface'] == form
+            points_s = geo_model.surface_points.df['surface'].loc[idxs_s]
+            simplicies = Delaunay(points).simplices
+            for simplicy in simplicies:
+                points = points_s[simplicy, :]
+
+                center = np.mean(points, axis=0)
+                normal = np.cross(points[0] - points[1], points[0] - points[2])
+                normal /= np.linalg.norm(normal)
+
+            orientation = geo_model.get_orientation(normal)
+            geo_model.add_orientations(X=center[0], Y=center[1], Z=center[2],
+                                       orientation=orientation, pole_vector=normal,
+                                       surface=form)
+
 
     return geo_model.orientations
 # endregion
