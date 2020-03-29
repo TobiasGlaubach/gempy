@@ -1497,6 +1497,9 @@ class SurfacePoints(GeometricData):
                 warnings.warn('Surface Points for the basement will not be used. Maybe you are missing an extra'
                               'layer at the bottom of the pile.')
 
+            if surface not in self.df['surface'].cat.categories:
+                self.df['surface'].cat.add_categories(surface)
+
             self.df.loc[idx, 'surface'] = surface
         # ToDO test this
         except ValueError as error:
