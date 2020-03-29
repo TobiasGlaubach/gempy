@@ -74,6 +74,22 @@ def test_add_surface_points():
     mm.add_surfaces(['surface1', 'foo1', 'foo2', 'foo3'])
     mm.add_surface_points(400, 300, -500, 'foo2')
 
+def test_add_surface_point2():
+    extend = [0.0, 1.0, 0.0, 1.0, 0.0, 1.1]
+    discretization = [5, 20, 20]
+
+    x, y, z, f = 0.0, 0.0, 0.5, 'surface_2'
+
+    geo_model = gp.create_model('test')
+    gp.init_data(geo_model, extend, discretization)
+
+    geo_model.set_default_surfaces()
+
+    mm.add_surfaces(['surface_1', 'surface_2'])
+
+    geo_model.add_surface_points(x, y, z, f)
+
+
 
 def test_add_default_orientation():
     mm = gp.DataMutation()
